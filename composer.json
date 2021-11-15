@@ -1,0 +1,18 @@
+{
+    "name": "megasteve19/editorjs",
+    "description": "EditorJS package to handle editor output in PHP.",
+    "type": "library",
+    "require": {
+        "codex-team/editor.js": "^2.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": { "Megasteve19\\EditorJS\\": "EditorJS/" }
+    },
+    "authors": [
+        {
+            "name": "Abdulkadir Cemiloğlu",
+            "email": "kadir.cemiloglu1@gmail.com"
+        }
+    ]
+}

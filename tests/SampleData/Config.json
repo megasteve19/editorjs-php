@@ -1,0 +1,72 @@
+{
+    "tools":
+    {
+        "header":
+        {
+            "text":
+            {
+                "type": "string",
+                "required": true,
+                "allowedTags": "b,i,a[href]"
+            },
+            "level":
+            {
+                "type": "int",
+                "canBeOnly": [1, 2 , 3, 4, 5, 6]
+            }
+        },
+        "paragraph":
+        {
+            "text":
+            {
+                "type": "string",
+                "required": true
+            }
+        },
+        "list":
+        {
+            "items":
+            {
+                "type": "array",
+                "data":
+                {
+                    "-":
+                    {
+                        "type": "string"
+                    }
+                }
+            },
+            "style": { "type": "string" }
+        },
+        "delimiter":
+        {
+        },
+        "image":
+        {
+            "file":
+            {
+                "type": "array",
+                "data":
+                {
+                    "url": "string"
+                }
+            },
+            "caption":
+            {
+                "type": "string"
+            },
+            "withBorder":
+            {
+                "type": "boolean"
+            },
+            "stretched":
+            {
+                "type": "boolean"
+            },
+            "withBackground":
+            {
+                "type": "boolean"
+            }
+        }
+    }
+}
