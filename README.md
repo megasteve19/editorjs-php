@@ -56,12 +56,11 @@ echo $editorJS->collection->find($id)->find('text');
 
 Here's all functions that collection has:
 
-- `all()` - Returns all blocks.
-- `getBlocksByType($type)` - Returns all blocks filtered by type.
+- `all($type)` - Returns all blocks. You can give type of blocks you want to get but it's optional. 
 - `find($id)` - Returns block by id.
-- `insert($block)` - Inserts a block to the collection.
-- `update($block)` - Updates a block in the collection.
-- `delete($id)` - Deletes a block from the collection.
+- `insert($block)` - Inserts a block to the collection. You can pass a block or an array of blocks.
+- `update($block)` - Updates a block in the collection. You can pass a block or an array of blocks.
+- `delete($block)` - Deletes a block from the collection. You can pass a block or an array of blocks.
 - `count()` - Returns count of blocks.
 - `clear()` - Clears the collection.
 - `toArray()` - Returns collection as array.
