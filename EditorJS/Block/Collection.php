@@ -31,10 +31,23 @@ namespace Megasteve19\EditorJS\Block;
         /**
          * Get all blocks.
          * 
+         * @param string $type [Optional] Type of blocks to get.
          * @return Block[] Array of blocks.
          */
-        public function all()
+        public function all(string $type = null)
         {
+            if(!empty($type))
+            {
+                $filteredBlocks = [];
+                foreach($this->blocks as $block)
+                {
+                    if($block->getType() === $type)
+                    {
+                        $filteredBlocks[] = $block;
+                    }
+                }
+                return $filteredBlocks;
+            }
             return $this->blocks;
         }
 
@@ -43,6 +56,7 @@ namespace Megasteve19\EditorJS\Block;
          * 
          * @param string $type Type of blocks to return.
          * @return Block[] Array of blocks.
+         * @deprecated Use `all()` instead.
          */
         public function getBlocksByType(string $type)
         {
@@ -76,40 +90,115 @@ namespace Megasteve19\EditorJS\Block;
         }
 
         /**
-         * Insert a new block to collection.
+         * Insert a new block or blocks to collection.
+         * 
+         * @param Block|array $block Block or blocks to insert.
+         * @return void
+         */
+        public function insert(array|Block $block)
+        {
+            if(is_array($block))
+            {
+                return $this->insertMultiple($block);
+            }
+            return $this->insertSingle($block);
+        }
+
+        /**
+         * Inserts single block to collection.
          * 
          * @param Block $block Block to insert.
          * @return void
          */
-        public function insert(Block $block)
+        private function insertSingle(Block $blockToInsert)
         {
-            $this->blocks[] = $block;
+            if(empty($this->find($blockToInsert->getId())))
+            {
+                $this->blocks[] = $blockToInsert;
+            }
         }
 
         /**
-         * Update a block by given block.
+         * Insert blocks to collection.
          * 
-         * @param Block $newBlock Block to replace.
+         * @param Block[] $blocks Blocks to insert.
          * @return void
          */
-        public function update(Block $newBlock)
+        private function insertMultiple(array $blocks)
+        {
+            foreach($blocks as $block)
+            {
+                $this->insertSingle($block);
+            }
+        }
+
+        /**
+         * Update block or blocks by given block or blocks of array.
+         * 
+         * @param Block|Block[] $block Block or blocks to update.
+         * @return void
+         */
+        public function update(array|Block $block)
+        {
+            if(is_array($block))
+            {
+                return $this->updateMultiple($block);
+            }
+            return $this->updateSingle($block);
+        }
+
+        /**
+         * Updates a block by given block.
+         * 
+         * @param Block $blockToUpdate Block to update.
+         * @return void
+         */
+        private function updateSingle(array|Block $blockToUpdate)
         {
             foreach($this->blocks as $key => $block)
             {
-                if($block->getId() === $newBlock->getId())
+                if($block->getId() === $blockToUpdate->getId())
                 {
-                    $this->blocks[$key] = $newBlock;
+                    $this->blocks[$key] = $blockToUpdate;
                     return;
                 }
             }
         }
 
         /**
+         * Update blocks by given array of blocks.
+         * 
+         * @param Block[] $blocks Blocks to update.
+         * @return void
+         */
+        private function updateMultiple(array $blocks)
+        {
+            foreach($blocks as $block)
+            {
+                $this->updateSingle($block);
+            }
+        }
+
+        /**
+         * Delete block or blocks by given block or blocks of array.
+         * 
+         * @param Block|Block[] $block Block or blocks to delete.
+         */
+        public function delete(array|Block $block)
+        {
+            if(is_array($block))
+            {
+                return $this->deleteMultiple($block);
+            }
+            return $this->deleteSingle($block);
+        }
+
+        /**
          * Deletes a block by given block.
          * 
-         * @param Block $blockToDelete Block to delete.
+         * @param Block|Block[] $blockToDelete Block or blocks to delete.
          */
-        public function delete(Block $blockToDelete)
+        private function deleteSingle(array|Block $blockToDelete)
         {
             foreach($this->blocks as $key => $block)
             {
@@ -118,6 +207,20 @@ namespace Megasteve19\EditorJS\Block;
                     unset($this->blocks[$key]);
                     return;
                 }
+            }
+        }
+
+        /**
+         * Delets blocks by given array of blocks.
+         * 
+         * @param Block[] $blocks Blocks to delete.
+         * @return void
+         */
+        private function deleteMultiple(array $blocks)
+        {
+            foreach($blocks as $block)
+            {
+                $this->deleteSingle($block);
             }
         }
 
