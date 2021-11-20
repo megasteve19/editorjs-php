@@ -22,7 +22,7 @@ $finded = $collection->find($block->getId());
 $filteredByType = $collection->getBlocksByType('header');
 //print_r($filteredByType);
 
-$allBlocks = $collection->getBlocks();
+$allBlocks = $collection->all();
 //print_r($allBlocks);
 
 // Update

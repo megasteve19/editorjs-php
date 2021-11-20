@@ -20,7 +20,7 @@ $block->update('file.url', 'https://example.com/image.jpg');
 $block->update('file.url.some', 'https://example.com/image.jpg');
 
 // Failed.. Nope It's successful now.
-$block->remove('caption.title');
-$block->remove('foo.bar.baz');
+$block->delete('caption.title');
+$block->delete('foo.bar.baz');
 
 print_r($block->toArray());
