@@ -1,1 +1,6 @@
-file:///var/www/editorjs-php/.gitignore
+# Composer
+vendor/
+composer.lock
+
+# Files
+index.php
