@@ -2,6 +2,8 @@
 
 namespace Megasteve19\EditorJS
 {
+    use Megasteve19\EditorJS\Block\{ Block, Collection };
+
     /**
      * Handles the EditorJS content.
      * 
@@ -12,7 +14,7 @@ namespace Megasteve19\EditorJS
         /**
          * Block collection.
          */
-        public Block\Collection $collection;
+        public Collection $collection;
 
         /**
          * Constructor.
@@ -22,8 +24,15 @@ namespace Megasteve19\EditorJS
          */
         public function __construct(string $json, string $config)
         {
+            // Parse JSON.
             $editorJS = new \EditorJS\EditorJS($json, $config);
-            $this->collection = new Block\Collection($editorJS->getBlocks());
+
+            // Create block collection.
+            $this->collection = new Collection();
+            foreach($editorJS->getBlocks() as $block)
+            {
+                $this->collection->insert(new Block($block));
+            }
         }
 
         /**

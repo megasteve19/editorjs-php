@@ -17,22 +17,19 @@ namespace Megasteve19\EditorJS\Block;
         /**
          * Block collection constructor.
          * 
-         * @param array $blocks Blocks to parse.
+         * @param Block[]|null $blocks [Optional] Blocks to handle.
          * @return void
          */
-        public function __construct(array $blocks)
+        public function __construct(?array $blocks = null)
         {
-            foreach($blocks as $block)
-            {
-                $this->blocks[] = new Block($block);
-            }
+            $this->blocks = $blocks ?? [];
         }
 
         /**
          * Get all blocks.
          * 
          * @param string $type [Optional] Type of blocks to get.
-         * @return Block[] Array of blocks.
+         * @return Collection Collection of blocks.
          */
         public function all(string $type = null)
         {
@@ -46,29 +43,9 @@ namespace Megasteve19\EditorJS\Block;
                         $filteredBlocks[] = $block;
                     }
                 }
-                return $filteredBlocks;
+                return new Collection($filteredBlocks);
             }
-            return $this->blocks;
-        }
-
-        /**
-         * Returns all blocks by type.
-         * 
-         * @param string $type Type of blocks to return.
-         * @return Block[] Array of blocks.
-         * @deprecated Use `all()` instead.
-         */
-        public function getBlocksByType(string $type)
-        {
-            $blocks = [];
-            foreach($this->blocks as $block)
-            {
-                if($block->getType() === $type)
-                {
-                    $blocks[] = $block;
-                }
-            }
-            return $blocks;
+            new Collection($this->blocks);
         }
 
         /**
