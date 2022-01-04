@@ -12,7 +12,12 @@ namespace Megasteve19\EditorJS
     class EditorJS
     {
         /**
-         * Block collection.
+         * @var JsonHandler $jsonHandler The JSON handler.
+         */
+        private JsonHandler $jsonHandler;
+
+        /**
+         * @var Collection $collection The collection of blocks.
          */
         public Collection $collection;
 
@@ -22,14 +27,16 @@ namespace Megasteve19\EditorJS
          * @param string $json JSON to parse.
          * @return void
          */
-        public function __construct(string $json, string $config)
+        public function __construct(string $json)
         {
             // Parse JSON.
-            $editorJS = new \EditorJS\EditorJS($json, $config);
+            $this->jsonHandler = new JsonHandler();
+            $this->jsonHandler->setJson($json);
 
             // Create block collection.
+            $rawBlocks = $this->jsonHandler->toArray()['blocks'];
             $this->collection = new Collection();
-            foreach($editorJS->getBlocks() as $block)
+            foreach($$rawBlocks as $block)
             {
                 $this->collection->insert(new Block($block));
             }
@@ -40,9 +47,12 @@ namespace Megasteve19\EditorJS
          * 
          * @return string JSON data.
          */
-        public function toJSON()
+        public function toJson()
         {
-            return json_encode([ 'blocks' => $this->collection->toArray() ]);
+            $data = $this->jsonHandler->toArray();
+            $data['blocks'] = $this->collection->toArray();
+            $this->jsonHandler->setData($data);
+            return $this->jsonHandler->toJson();
         }
 
         /**
@@ -51,7 +61,7 @@ namespace Megasteve19\EditorJS
          * @param string $templatesPath Template path to use.
          * @return string HTML.
          */
-        public function toHTML(string $templatesPath)
+        public function toHtml(string $templatesPath)
         {
             return $this->collection->toHTML($templatesPath);
         }
