@@ -49,6 +49,21 @@ namespace Megasteve19\EditorJS\Block;
         }
 
         /**
+         * Get block by index.
+         * 
+         * @param int $index Index of block to get.
+         * @return Block|null Block.
+         */
+        public function get(int $index)
+        {
+            if(isset($this->blocks[$index]))
+            {
+                return $this->blocks[$index];
+            }
+            return null;
+        }
+
+        /**
          * Get block by id.
          * 
          * @param string $id Block id.
