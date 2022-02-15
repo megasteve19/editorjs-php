@@ -1,11 +1,15 @@
 <?php
 
-namespace Megasteve19\EditorJS\Block;
+namespace Megasteve19\EditorJS\Block
 {
     /**
      * Base class for all block types.
      * 
      * @author megasteve19
+     * 
+     * @property string $id
+     * @property string $type
+     * @property array $data
      */
     class Block
     {
@@ -38,137 +42,81 @@ namespace Megasteve19\EditorJS\Block;
         }
 
         /**
-         * Get the block's unique ID.
+         * Get methods for the properties.
          * 
-         * @return string
+         * @param string $name The name of the property to get.
+         * @return mixed The value of the property.
          */
-        public function getId()
+        public function __get(string $name)
         {
-            return $this->id;
+            return $this->$name;
         }
 
         /**
-         * Get the block's type.
-         * 
-         * @return string
-         */
-        public function getType()
-        {
-            return $this->type;
-        }
-
-        /**
-         * Get the block's data.
-         * 
-         * @return array
-         */
-        public function getData()
-        {
-            return $this->data;
-        }
-
-        /**
-         * Rescurively search for a specific key in the block's data.
-         * Syntax: `$block->find('key1.key2.key3')`.
+         * Search for a specific key in the block's data.
+         * Syntax: `$block->get('key1.key2.key3')`.
          * 
          * @param string $key The key to get the data from.
          * @return mixed|null The data or null if not found.
          */
-        public function find(string $key)
+        public function get(string $key)
         {
-            $data = $this->data;
+            $data = &$this->data;
             $keys = explode('.', $key);
             foreach($keys as $key)
             {
-                if(isset($data[$key]))
-                    $data = $data[$key];
-                else
+                if(empty($data[$key]))
+                {
                     return null;
+                }
+                $data = &$data[$key];
             }
             return $data;
         }
 
         /**
-         * Inserts a new data key into the block's data.
-         * Syntax: `$block->insert('key1.key2.key3', $value)`.
+         * Set a new value for a specific key in the block's data.
+         * Syntax: `$block->set('key1.key2.key3', $value)`.
          * 
-         * @param string $key The key to insert.
-         * @param mixed $value The value to insert.
-         * @return bool True if the key was inserted, false otherwise.
+         * @param string $key The key to set the data.
+         * @param mixed $value The value to set.
+         * @return void
          */
-        public function insert(string $key, $value)
-        {
-            $keys = explode('.', $key);
-            $data = &$this->data;
-            
-            foreach($keys as $key)
-            {
-                if(empty($data[$key]))
-                    $data[$key] = [];
-                $data = &$data[$key];
-            }
-
-            // Check if the key already exists.
-            if(empty($data))
-            {
-                $data = $value;
-                return true;
-            }
-            return false;
-        }
-
-        /**
-         * Update the block's data with a new one.
-         * Syntax: `$block->update('key1.key2.key3', $newData)`.
-         * 
-         * @param string $key The key to replace the data.
-         * @param mixed $data The new data.
-         * @return bool True if the key was updated, false otherwise.
-         */
-        public function update(string $key, $newData)
+        public function set(string $key, mixed $value)
         {
             $data = &$this->data;
             $keys = explode('.', $key);
-            foreach($keys as $key)
-            {
-                if(isset($data[$key]))
-                    $data = &$data[$key];
-                else
-                    return false;
-            }
-            $data = $newData;
-            return true;
-        }
-
-        /**
-         * Remove a key from the block's data.
-         * Syntax: `$block->remove('key1.key2.key3')`.
-         * 
-         * @param string $key The key to remove.
-         * @return bool True if the key was removed, false otherwise.
-         */
-        public function delete(string $key)
-        {
-            $keys = explode('.', $key);
-            $lastKey = array_pop($keys);
-            $data = &$this->data;
-
             foreach($keys as $key)
             {
                 if(empty($data[$key]))
                 {
-                    return;
+                    $data[$key] = [];
                 }
                 $data = &$data[$key];
             }
+            $data = $value;
+        }
 
-            // Unset if the key exists.
-            if(!empty($data[$lastKey]))
+        /**
+         * Check if a specific key exists in the block's data.
+         * Syntax: `$block->has('key1.key2.key3')`.
+         * 
+         * @param string $key The key to check.
+         * @return bool True if the key exists, false otherwise.
+         */
+        public function has(string $key)
+        {
+            $data = &$this->data;
+            $keys = explode('.', $key);
+            foreach($keys as $key)
             {
-                unset($data[$lastKey]);
-                return true;
+                if(empty($data[$key]))
+                {
+                    return false;
+                }
+                $data = &$data[$key];
             }
-            return false;
+            return true;
         }
 
         /**
