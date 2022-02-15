@@ -2,6 +2,8 @@
 
 namespace Megasteve19\EditorJS
 {
+    use Megasteve19\EditorJS\Block\{ Block, Collection };
+
     /**
      * Handles the EditorJS content.
      * 
@@ -10,9 +12,14 @@ namespace Megasteve19\EditorJS
     class EditorJS
     {
         /**
-         * Block collection.
+         * @var JsonHandler $jsonHandler The JSON handler.
          */
-        public Block\Collection $collection;
+        private JsonHandler $jsonHandler;
+
+        /**
+         * @var Collection $collection The collection of blocks.
+         */
+        public Collection $collection;
 
         /**
          * Constructor.
@@ -20,10 +27,19 @@ namespace Megasteve19\EditorJS
          * @param string $json JSON to parse.
          * @return void
          */
-        public function __construct(string $json, string $config)
+        public function __construct(string $json)
         {
-            $editorJS = new \EditorJS\EditorJS($json, $config);
-            $this->collection = new Block\Collection($editorJS->getBlocks());
+            // Parse JSON.
+            $this->jsonHandler = new JsonHandler();
+            $this->jsonHandler->setJson($json);
+
+            // Create block collection.
+            $rawBlocks = $this->jsonHandler->toArray()['blocks'];
+            $this->collection = new Collection();
+            foreach($$rawBlocks as $block)
+            {
+                $this->collection->insert(new Block($block));
+            }
         }
 
         /**
@@ -31,9 +47,12 @@ namespace Megasteve19\EditorJS
          * 
          * @return string JSON data.
          */
-        public function toJSON()
+        public function toJson()
         {
-            return json_encode([ 'blocks' => $this->collection->toArray() ]);
+            $data = $this->jsonHandler->toArray();
+            $data['blocks'] = $this->collection->toArray();
+            $this->jsonHandler->setData($data);
+            return $this->jsonHandler->toJson();
         }
 
         /**
@@ -42,7 +61,7 @@ namespace Megasteve19\EditorJS
          * @param string $templatesPath Template path to use.
          * @return string HTML.
          */
-        public function toHTML(string $templatesPath)
+        public function toHtml(string $templatesPath)
         {
             return $this->collection->toHTML($templatesPath);
         }

@@ -3,7 +3,7 @@
     "description": "EditorJS package to handle editor output in PHP.",
     "type": "library",
     "require": {
-        "codex-team/editor.js": "^2.0"
+        "php": "^8.0"
     },
     "license": "MIT",
     "autoload": {
