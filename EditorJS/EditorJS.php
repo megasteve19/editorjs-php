@@ -36,9 +36,9 @@ namespace Megasteve19\EditorJS
             // Create block collection.
             $rawBlocks = $this->jsonHandler->toArray()['blocks'];
             $this->collection = new Collection();
-            foreach($$rawBlocks as $block)
+            foreach($rawBlocks as $block)
             {
-                $this->collection->insert(new Block($block));
+                $this->collection->add(new Block($block));
             }
         }
 
