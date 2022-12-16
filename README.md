@@ -1,3 +1,5 @@
+Please refer to new [package](https://github.com/bumpcore/editor.php).
+
 # EditorJS Extended
 Hi, I was just building a back-end project, and a little EditorJS parser. It's ended up with a useful little library. It's my first package, so please be kind and give me feedback.
 ***
